@@ -114,8 +114,24 @@ setText("title",song.title);
 setText("albumYear",[song.album,song.year].filter(Boolean).join(" · "));
 setText("album",song.album);
 setText("year",song.year);
-setText("singer",song.singer);
-setText("music",song.music);
+// Make Singer and Music names clickable; Director stays plain text.
+function setNameLinks(elementId, value, page) {
+  const el = document.getElementById(elementId);
+  el.replaceChildren();
+  const names = (value || "").split(",").map(name => name.trim()).filter(Boolean);
+  if (!names.length) { el.textContent = "—"; return; }
+  names.forEach((name, index) => {
+    if (index) el.append(document.createTextNode(", "));
+    const link = document.createElement("a");
+    link.href = page + "?name=" + encodeURIComponent(name);
+    link.textContent = name;
+    link.style.color = "inherit";
+    link.style.textDecoration = "underline";
+    el.append(link);
+  });
+}
+setNameLinks("singer", song.singer, "singers.html");
+setNameLinks("music", song.music, "music-directors.html");
 setText("director",song.director);
 document.getElementById("details").textContent = song.details || "";
 const cover = document.getElementById("cover");
