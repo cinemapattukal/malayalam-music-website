@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Song Details - Malayalam Music</title>
+<style>
+:root{--green:#168653;--dark:#106b42;--text:#202124;--muted:#73777d;--border:#e8eaed;--soft:#f7f9f8}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:#fff}
+header{padding:16px 18px;border-bottom:1px solid var(--border);background:#fff}.wrap{max-width:1000px;margin:auto}
+.logo{color:var(--green);font-weight:700;font-size:22px;text-decoration:none}.back{display:inline-block;color:var(--muted);text-decoration:none;margin-top:14px;font-size:14px}
+main{max-width:1000px;margin:auto;padding:22px 16px 40px}.detail{display:grid;grid-template-columns:1fr;gap:20px}
+.poster{width:100%;max-width:360px;aspect-ratio:1;object-fit:cover;border-radius:14px;background:#eee}
+h1{font-size:25px;line-height:1.25;margin:0 0 8px}.subtitle{color:var(--muted);margin:0 0 18px}
+.meta{border-top:1px solid var(--border);margin-top:14px}.meta-row{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px}
+.meta-row strong{width:110px;flex-shrink:0}.meta-row span{overflow-wrap:anywhere}
+.buttons{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0}
+.btn{display:flex;align-items:center;justify-content:center;text-align:center;padding:13px 12px;border:0;border-radius:9px;font-size:14px;text-decoration:none;cursor:pointer;min-height:44px}
+.primary{background:var(--green);color:#fff}.secondary{background:#eef7f1;color:var(--dark)}.plain{background:#fff;border:1px solid var(--border);color:var(--text)}
+.player-box{margin-top:22px;padding:14px;border:1px solid var(--border);border-radius:14px;background:var(--soft)}
+.player-box h2{font-size:18px;margin:0 0 12px}.notice{font-size:12px;line-height:1.55;color:var(--muted);margin:10px 0 0}
+#youtubePlayer{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#111}
+#noVideo{display:none;padding:20px;text-align:center;background:#eee;border-radius:10px;color:#555}
+.description{line-height:1.6;font-size:14px;white-space:pre-wrap;margin-top:18px}
+footer{text-align:center;padding:24px 12px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+@media(min-width:700px){header{padding:18px 24px}main{padding:30px 24px 48px}.detail{grid-template-columns:minmax(240px,340px) 1fr;align-items:start}.buttons{grid-template-columns:1fr 1fr}.player-box{padding:18px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="./">♪ Malayalam Music</a><br><a class="back" href="./">← Back to songs</a></div></header>
+<main>
+  <div class="detail">
+    <div><img id="cover" class="poster" src="https://placehold.co/500x500/f0f0f0/777?text=Music" alt="Album cover"></div>
+    <section>
+      <h1 id="title">Song Details</h1>
+      <p id="albumYear" class="subtitle"></p>
+      <div class="meta">
+        <div class="meta-row"><strong>Album / Movie</strong><span id="album">—</span></div>
+        <div class="meta-row"><strong>Released</strong><span id="year">—</span></div>
+        <div class="meta-row"><strong>Singer</strong><span id="singer">—</span></div>
+        <div class="meta-row"><strong>Music</strong><span id="music">—</span></div>
+        <div class="meta-row"><strong>Director</strong><span id="director">—</span></div>
+      </div>
+      <div class="buttons">
+        <a id="download" class="btn primary" href="#" target="_blank" rel="noopener noreferrer">↓ Direct Download</a>
+        <a id="openYouTube" class="btn secondary" href="#" target="_blank" rel="noopener noreferrer">▶ Open YouTube</a>
+      </div>
+      <div id="details" class="description"></div>
+    </section>
+  </div>
+
+  <section class="player-box">
+    <h2>▶ Song Streaming</h2>
+    <iframe id="youtubePlayer" title="YouTube song player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div id="noVideo">No YouTube video link has been added for this song.</div>
+    <p class="notice">Streaming uses YouTube's official embedded player, which displays the video as well as audio. YouTube may restrict embedding for some videos. Direct Download uses the authorized Google Drive audio file ID; Google may show a confirmation page for large files.</p>
+  </section>
+</main>
+<footer>Malayalam Music · Song Details</footer>
+<script>
+/* Keep this song data in sync with the music array in index.html. */
+const music = [
+  {
+    id: "maanthrikam",
+    title: "Maanthrikam",
+    album: "Bethlehem Kudumba Unit",
+    year: "2026",
+    singer: "Add Singer Name",
+    music: "Add Music Director",
+    director: "Add Director",
+    cover: "https://placehold.co/500x500/f0f0f0/777?text=Album",
+    youtubeUrl: "https://www.youtube.com/watch?v=VIDEO_ID",
+    driveId: "1AeAqZb2RSMER-nD6NVlvrTUM8K87-qbD",
+    details: "Add song details here."
+  },
+  {
+    id: "sample-song-2",
+    title: "Add Another Song",
+    album: "Add Album Name",
+    year: "2025",
+    singer: "Add Singer Name",
+    music: "Add Music Director",
+    director: "Add Director",
+    cover: "https://placehold.co/500x500/f0f0f0/777?text=Music",
+    youtubeUrl: "",
+    driveId: "",
+    details: ""
+  }
+];
+
+function youtubeId(url) {
+  if (!url) return "";
+  try {
+    const u = new URL(url);
+    if (u.hostname === "youtu.be") return u.pathname.slice(1).split("/")[0];
+    if (u.hostname.endsWith("youtube.com") || u.hostname.endsWith("youtube-nocookie.com")) {
+      if (u.pathname === "/watch") return u.searchParams.get("v") || "";
+      const p = u.pathname.split("/").filter(Boolean);
+      if (["embed","shorts","live"].includes(p[0])) return p[1] || "";
+    }
+  } catch(e) {}
+  return "";
+}
+function setText(id,value){document.getElementById(id).textContent=value || "—";}
+const params = new URLSearchParams(location.search);
+const songId = params.get("id");
+const song = music.find(s => s.id === songId) || music[0];
+
+document.title = song.title + " - Malayalam Music";
+setText("title",song.title);
+setText("albumYear",[song.album,song.year].filter(Boolean).join(" · "));
+setText("album",song.album);
+setText("year",song.year);
+setText("singer",song.singer);
+setText("music",song.music);
+setText("director",song.director);
+document.getElementById("details").textContent = song.details || "";
+const cover = document.getElementById("cover");
+cover.src = song.cover || "https://placehold.co/500x500/f0f0f0/777?text=Music";
+cover.alt = song.title + " cover";
+cover.onerror = () => { cover.onerror=null; cover.src="https://placehold.co/500x500/f0f0f0/777?text=Music"; };
+
+const download = document.getElementById("download");
+if (song.driveId) {
+  download.href = "https://drive.google.com/uc?export=download&id=" + encodeURIComponent(song.driveId);
+} else {
+  download.href = "#";
+  download.addEventListener("click",e=>{e.preventDefault();alert("Add the Google Drive audio file ID first.");});
+}
+const ytId = youtubeId(song.youtubeUrl);
+const yt = document.getElementById("youtubePlayer");
+const noVideo = document.getElementById("noVideo");
+const openYT = document.getElementById("openYouTube");
+if (ytId) {
+  yt.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(ytId);
+  openYT.href = "https://www.youtube.com/watch?v=" + encodeURIComponent(ytId);
+} else {
+  yt.style.display = "none";
+  noVideo.style.display = "block";
+  openYT.href = "#";
+  openYT.addEventListener("click",e=>{e.preventDefault();alert("Add a valid YouTube video link first.");});
+}
+</script>
+</body>
+</html>
