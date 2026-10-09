@@ -48,10 +48,16 @@ function render(){
  [["songs",songRows,"song"],["singers",singerRows,"singer"],["directors",directorRows,"director"]].forEach(([id,rows,type])=>{const el=$(id);el.replaceChildren();if(!rows.length){const e=document.createElement("div");e.className="empty";e.textContent="No "+(type==="song"?"songs":type==="singer"?"singers":"music directors")+" found.";el.append(e)}else rows.forEach(r=>el.append(card(r,type)))});
 }
 function makePeople(){
+ // Keep Firestore profile records first so their own image URLs are preserved.
  const singerMap=new Map(),directorMap=new Map();
- songs.forEach(s=>{names(s.singer).forEach(n=>{if(!singerMap.has(n))singerMap.set(n,{name:n,image:s.cover})});names(s.music).forEach(n=>{if(!directorMap.has(n))directorMap.set(n,{name:n,image:s.cover})})});
- singers=[...singerMap.values(),...singers].filter((x,i,a)=>a.findIndex(y=>y.name===x.name)===i);
- directors=[...directorMap.values(),...directors].filter((x,i,a)=>a.findIndex(y=>y.name===x.name)===i);
+ singers.forEach(p=>{if(p.name)singerMap.set(String(p.name).trim(),p)});
+ directors.forEach(p=>{if(p.name)directorMap.set(String(p.name).trim(),p)});
+ songs.forEach(s=>{
+  names(s.singer).forEach(n=>{if(!singerMap.has(n))singerMap.set(n,{name:n,image:s.cover||""})});
+  names(s.music).forEach(n=>{if(!directorMap.has(n))directorMap.set(n,{name:n,image:s.cover||""})});
+ });
+ singers=[...singerMap.values()];
+ directors=[...directorMap.values()];
 }
 $("search").addEventListener("input",render);
 try{
