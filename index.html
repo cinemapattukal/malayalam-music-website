@@ -1,94 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ffffff">
-<title>Malayalam Music</title>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff"><title>Malayalam Music</title>
 <style>
 :root{--green:#168653;--dark:#106b42;--text:#202124;--muted:#73777d;--border:#e8eaed}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:#fff}
-header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--border);padding:16px 18px}
-.wrap{max-width:1200px;margin:auto}.logo{font-size:22px;font-weight:700;color:var(--green);text-decoration:none}
-#search{width:100%;margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;outline:none}
-#search:focus{border-color:var(--green)}main{max-width:1200px;margin:auto;padding:24px 18px 36px}
-h2{font-size:20px;margin:4px 0 16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{border:1px solid var(--border);border-radius:12px;overflow:hidden;min-width:0}.cover-link{display:block}
-.cover{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#f0f0f0}
-.info{padding:10px}.song-title{display:block;font-size:14px;line-height:1.4;font-weight:700;color:var(--text);text-decoration:none;margin-bottom:5px;overflow-wrap:anywhere}
-.song-title:hover{color:var(--green)}.year{font-size:12px;color:var(--muted);margin:0 0 10px}
-.actions{display:grid;grid-template-columns:1fr;gap:7px}.btn{border:0;border-radius:8px;padding:10px 8px;min-height:38px;font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer}
-.play{background:var(--green);color:#fff}.download{background:#eef7f1;color:var(--dark)}.empty{grid-column:1/-1;padding:24px;text-align:center;border:1px dashed var(--border);border-radius:12px;color:var(--muted)}
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--border);padding:16px 18px}.wrap{max-width:1200px;margin:auto}.logo{font-size:22px;font-weight:700;color:var(--green);text-decoration:none}
+nav{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}nav a{color:#444;text-decoration:none;font-size:14px}
+#search{width:100%;margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px}
+main{max-width:1200px;margin:auto;padding:24px 18px 36px}.section{margin-bottom:34px}h2{font-size:20px;margin:4px 0 16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{border:1px solid var(--border);border-radius:12px;overflow:hidden;min-width:0}.cover{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#f0f0f0}.info{padding:10px}.name{display:block;font-size:14px;line-height:1.4;font-weight:700;color:var(--text);text-decoration:none;overflow-wrap:anywhere}.year,.sub{font-size:12px;color:var(--muted);margin:6px 0 10px}.btn{display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 8px;background:#eef7f1;color:var(--dark);border-radius:8px;font-size:13px;text-decoration:none;min-height:38px}.empty{grid-column:1/-1;padding:20px;text-align:center;border:1px dashed var(--border);border-radius:12px;color:var(--muted)}
 footer{text-align:center;padding:24px 12px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
-@media(min-width:700px){header{padding:18px 24px}.grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}main{padding:28px 24px 40px}.actions{grid-template-columns:1fr 1fr}}
-</style>
-</head>
-<body>
-<header><div class="wrap"><a class="logo" href="./">♪ Malayalam Music</a><input id="search" type="search" placeholder="Search songs or albums..." aria-label="Search songs"></div></header>
-<main><h2>Latest Songs</h2><div class="grid" id="songs"></div></main>
-<footer>Malayalam Music · Home · Songs · Albums · Singers</footer>
-<script>
-/*
-  EDIT SONG DATA HERE.
-  youtubeUrl = official YouTube video link for streaming on the song details page.
-  driveId = Google Drive FILE ID for an audio file you own or have permission to distribute.
-*/
-const music = [
-  {
-    id: "maanthrikam",
-    title: "Maanthrikam",
-    album: "Bethlehem Kudumba Unit",
-    year: "2026",
-    singer: "Add Singer Name",
-    music: "Add Music Director",
-    director: "Add Director",
-    cover: "https://placehold.co/500x500/f0f0f0/777?text=Album",
-    youtubeUrl: "https://www.youtube.com/watch?v=wLG9P297wLg&pp=iggCQAE%3D",
-    driveId: "https://drive.usercontent.google.com/download?id=1a9V7Ud4-dbMnOaEWgmtBo4-5UdP6EW2u&export=download&confirm=t",
-    details: "Add song details here."
-  },
-  {
-    id: "sample-song-2",
-    title: "Add Another Song",
-    album: "Add Album Name",
-    year: "2025",
-    singer: "Add Singer Name",
-    music: "Add Music Director",
-    director: "Add Director",
-    cover: "https://placehold.co/500x500/f0f0f0/777?text=Music",
-    youtubeUrl: "https://youtu.be/wLG9P297wLg?si=ibBhFz6JskvbPgxu",
-    driveId: "https://drive.usercontent.google.com/download?id=1a9V7Ud4-dbMnOaEWgmtBo4-5UdP6EW2u&export=download&confirm=t",
-    details: ""
-  }
-];
+@media(min-width:700px){header{padding:18px 24px}.grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}main{padding:28px 24px 40px}}
+</style></head><body>
+<header><div class="wrap"><a class="logo" href="./">♪ Malayalam Music</a><nav><a href="./">Home</a><a href="singers.html">Singers</a><a href="music-directors.html">Music Directors</a></nav><input id="search" type="search" placeholder="Search songs, singers or music directors..." aria-label="Search"></div></header>
+<main>
+<section class="section"><h2>Latest Songs</h2><div class="grid" id="songs"><div class="empty">Loading songs…</div></div></section>
+<section class="section"><h2>Singers</h2><div class="grid" id="singers"><div class="empty">Loading singers…</div></div></section>
+<section class="section"><h2>Music Directors</h2><div class="grid" id="directors"><div class="empty">Loading music directors…</div></div></section>
+</main><footer>Malayalam Music · Home · Singers · Music Directors</footer>
+<script type="module">
 
-const list = document.getElementById("songs");
-const search = document.getElementById("search");
-function render() {
-  const q = search.value.trim().toLowerCase();
-  list.replaceChildren();
-  const filtered = music.filter(s => [s.title,s.album,s.year,s.singer].join(" ").toLowerCase().includes(q));
-  if (!filtered.length) {
-    const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "No songs found."; list.append(empty); return;
-  }
-  filtered.forEach(s => {
-    const card = document.createElement("article"); card.className = "card";
-    const coverLink = document.createElement("a"); coverLink.className = "cover-link"; coverLink.href = "song.html?id=" + encodeURIComponent(s.id);
-    const img = document.createElement("img"); img.className = "cover"; img.src = s.cover; img.alt = s.title + " cover"; img.loading = "lazy";
-    img.onerror = () => { img.onerror = null; img.src = "https://placehold.co/500x500/f0f0f0/777?text=Music"; };
-    coverLink.append(img);
-    const info = document.createElement("div"); info.className = "info";
-    const title = document.createElement("a"); title.className = "song-title"; title.href = "song.html?id=" + encodeURIComponent(s.id); title.textContent = s.title;
-    const year = document.createElement("p"); year.className = "year"; year.textContent = s.year;
-    const actions = document.createElement("div"); actions.className = "actions";
-    const view = document.createElement("a"); view.className = "btn play"; view.href = "song.html?id=" + encodeURIComponent(s.id); view.textContent = "Song Details";
-    const dl = document.createElement("a"); dl.className = "btn download"; dl.textContent = "↓ Download";
-    if (s.driveId) { dl.href = "https://drive.google.com/uc?export=download&id=" + encodeURIComponent(s.driveId); dl.target = "_blank"; dl.rel = "noopener noreferrer"; }
-    else { dl.href = "#"; dl.addEventListener("click", e => { e.preventDefault(); alert("Add the Google Drive audio file ID first."); }); }
-    actions.append(view,dl); info.append(title,year,actions); card.append(coverLink,info); list.append(card);
-  });
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCiQ71SaooetywbZQxZs7PpqYoz8cWOZrI",
+  authDomain: "malayalam-music-website.firebaseapp.com",
+  projectId: "malayalam-music-website",
+  storageBucket: "malayalam-music-website.firebasestorage.app",
+  messagingSenderId: "1046190707332",
+  appId: "1:1046190707332:web:a6b30072d7784c7db128d1"
+};
+
+const app=initializeApp(firebaseConfig),db=getFirestore(app);
+const $=id=>document.getElementById(id);let songs=[],singers=[],directors=[];
+const fallback="https://placehold.co/500x500/f0f0f0/777?text=Music";
+function names(value){return String(value||"").split(",").map(x=>x.trim()).filter(Boolean)}
+function card(item,type){const c=document.createElement("article");c.className="card";const img=document.createElement("img");img.className="cover";img.src=item.cover||item.image||fallback;img.alt=item.title||item.name||"Music";img.loading="lazy";img.onerror=()=>{img.onerror=null;img.src=fallback};const info=document.createElement("div");info.className="info";const a=document.createElement("a");a.className="name";a.textContent=item.title||item.name||"Untitled";const sub=document.createElement("div");sub.className=type==="song"?"year":"sub";let url="";
+if(type==="song"){url="song.html?id="+encodeURIComponent(item.id||item.docId);sub.textContent=[item.album,item.year].filter(Boolean).join(" · ")}
+else if(type==="singer"){url="singers.html?name="+encodeURIComponent(item.name);sub.textContent="Singer"}
+else{url="music-directors.html?name="+encodeURIComponent(item.name);sub.textContent="Music Director"}
+a.href=url;const btn=document.createElement("a");btn.className="btn";btn.href=url;btn.textContent=type==="song"?"Song Details":"View Songs";info.append(a,sub,btn);c.append(img,info);return c}
+function render(){
+ const q=$("search").value.trim().toLowerCase();
+ const songRows=songs.filter(s=>[s.title,s.album,s.year,s.singer,s.music].join(" ").toLowerCase().includes(q));
+ const singerRows=singers.filter(p=>String(p.name||"").toLowerCase().includes(q));
+ const directorRows=directors.filter(p=>String(p.name||"").toLowerCase().includes(q));
+ [["songs",songRows,"song"],["singers",singerRows,"singer"],["directors",directorRows,"director"]].forEach(([id,rows,type])=>{const el=$(id);el.replaceChildren();if(!rows.length){const e=document.createElement("div");e.className="empty";e.textContent="No "+(type==="song"?"songs":type==="singer"?"singers":"music directors")+" found.";el.append(e)}else rows.forEach(r=>el.append(card(r,type)))});
 }
-search.addEventListener("input",render); render();
-</script>
-</body>
-</html>
+function makePeople(){
+ const singerMap=new Map(),directorMap=new Map();
+ songs.forEach(s=>{names(s.singer).forEach(n=>{if(!singerMap.has(n))singerMap.set(n,{name:n,image:s.cover})});names(s.music).forEach(n=>{if(!directorMap.has(n))directorMap.set(n,{name:n,image:s.cover})})});
+ singers=[...singerMap.values(),...singers].filter((x,i,a)=>a.findIndex(y=>y.name===x.name)===i);
+ directors=[...directorMap.values(),...directors].filter((x,i,a)=>a.findIndex(y=>y.name===x.name)===i);
+}
+$("search").addEventListener("input",render);
+try{
+ const [s,si,md]=await Promise.all([getDocs(collection(db,"songs")),getDocs(collection(db,"singers")),getDocs(collection(db,"musicDirectors"))]);
+ songs=s.docs.map(d=>({...d.data(),docId:d.id,id:d.data().id||d.id})).sort((a,b)=>String(b.year||"").localeCompare(String(a.year||"")));
+ singers=si.docs.map(d=>({...d.data(),docId:d.id,name:d.data().name||d.id}));
+ directors=md.docs.map(d=>({...d.data(),docId:d.id,name:d.data().name||d.id}));
+ makePeople();render();
+}catch(e){console.error(e);["songs","singers","directors"].forEach(id=>{$(id).innerHTML='<div class="empty">Could not load data. Check Firestore Rules and collection names.</div>'})}
+</script></body></html>
