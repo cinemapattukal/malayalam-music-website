@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Malayalam Music</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#222}
+header{padding:18px;background:#fff;border-bottom:1px solid #eee}
+.logo{font-size:24px;font-weight:bold;color:#168653}
+.search{width:100%;padding:13px;border:1px solid #ddd;
+border-radius:10px;margin-top:14px;font-size:16px}
+main{padding:16px}
+h2{font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{border:1px solid #eee;border-radius:12px;overflow:hidden}
+.cover{width:100%;aspect-ratio:1;object-fit:cover;background:#eee}
+.info{padding:10px}
+.info h3{font-size:15px;margin:0 0 6px}
+.info p{font-size:13px;color:#777;margin:0 0 10px}
+button{border:0;border-radius:8px;padding:10px;cursor:pointer}
+.play{background:#168653;color:white;width:100%}
+audio{width:100%;margin-top:16px}
+footer{text-align:center;padding:24px;color:#777;font-size:13px}
+@media(min-width:700px){
+ .grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+ main{padding:24px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">♪ Malayalam Music</div>
+  <input class="search" id="search"
+    placeholder="Search songs or albums..."
+    oninput="filterSongs()">
+</header>
+
+<main>
+<h2>Latest Songs</h2>
+<div class="grid" id="songs"></div>
+
+<h2>Now Playing</h2>
+<div id="nowPlaying">Choose a song to play</div>
+<audio id="player" controls preload="none"></audio>
+</main>
+
+<footer>Malayalam Music · Home · Albums · Singers</footer>
+
+<script>
+const music = [
+  {
+    title: "Sample Malayalam Song",
+    year: "2026",
+    cover: "https://placehold.co/500x500?text=Album",
+    driveId: "PASTE_YOUR_DRIVE_FILE_ID"
+  },
+  {
+    title: "Another Sample Song",
+    year: "2025",
+    cover: "https://placehold.co/500x500?text=Music",
+    driveId: ""
+  }
+];
+
+function filterSongs(){
+  const q = document.getElementById("search").value.toLowerCase();
+  const list = document.getElementById("songs");
+  list.innerHTML = "";
+
+  music.filter(s => s.title.toLowerCase().includes(q))
+  .forEach(s => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const img = document.createElement("img");
+    img.className = "cover";
+    img.src = s.cover;
+    img.alt = s.title;
+
+    const info = document.createElement("div");
+    info.className = "info";
+
+    const title = document.createElement("h3");
+    title.textContent = s.title;
+
+    const year = document.createElement("p");
+    year.textContent = s.year;
+
+    const btn = document.createElement("button");
+    btn.className = "play";
+    btn.textContent = "▶ Play Song";
+    btn.onclick = () => playSong(s);
+
+    info.append(title, year, btn);
+    card.append(img, info);
+    list.append(card);
+  });
+}
+
+function playSong(song){
+  if(!song.driveId ||
+     song.driveId === "PASTE_YOUR_DRIVE_FILE_ID"){
+    alert("Add a public, authorized audio file ID first.");
+    return;
+  }
+
+  const player = document.getElementById("player");
+  player.src = "https://drive.google.com/uc?export=download&id="
+               + encodeURIComponent(song.driveId);
+  document.getElementById("nowPlaying").textContent = song.title;
+  player.play().catch(() => {
+    alert("Audio playback failed. Check the Drive sharing permission.");
+  });
+}
+
+filterSongs();
+</script>
+</body>
+</html>
