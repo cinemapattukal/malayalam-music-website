@@ -1,122 +1,359 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Malayalam Music</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#222}
-header{padding:18px;background:#fff;border-bottom:1px solid #eee}
-.logo{font-size:24px;font-weight:bold;color:#168653}
-.search{width:100%;padding:13px;border:1px solid #ddd;
-border-radius:10px;margin-top:14px;font-size:16px}
-main{padding:16px}
-h2{font-size:20px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.card{border:1px solid #eee;border-radius:12px;overflow:hidden}
-.cover{width:100%;aspect-ratio:1;object-fit:cover;background:#eee}
-.info{padding:10px}
-.info h3{font-size:15px;margin:0 0 6px}
-.info p{font-size:13px;color:#777;margin:0 0 10px}
-button{border:0;border-radius:8px;padding:10px;cursor:pointer}
-.play{background:#168653;color:white;width:100%}
-audio{width:100%;margin-top:16px}
-footer{text-align:center;padding:24px;color:#777;font-size:13px}
-@media(min-width:700px){
- .grid{grid-template-columns:repeat(5,minmax(0,1fr))}
- main{padding:24px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Malayalam Music</title>
+  <style>
+    :root {
+      --green: #168653;
+      --green-dark: #106b42;
+      --text: #202124;
+      --muted: #73777d;
+      --border: #e8eaed;
+      --page: #ffffff;
+      --soft: #f6f8f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--page);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: rgba(255,255,255,.97);
+      border-bottom: 1px solid var(--border);
+      padding: 15px 18px;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .logo {
+      color: var(--green);
+      font-size: 22px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .search-wrap { max-width: 1200px; margin: 14px auto 0; }
+    #search {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+    #search:focus { border-color: var(--green); }
+    main { max-width: 1200px; padding: 22px 18px 32px; margin: auto; }
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0 14px;
+    }
+    h2 { font-size: 20px; margin: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      min-width: 0;
+      background: #fff;
+    }
+    .cover {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      background: #f0f0f0;
+    }
+    .info { padding: 10px; }
+    .song-title {
+      font-size: 14px;
+      line-height: 1.35;
+      margin: 0 0 5px;
+      overflow-wrap: anywhere;
+    }
+    .year { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+    .actions { display: grid; gap: 7px; }
+    button, .action-link {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 9px;
+      min-height: 38px;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .play { background: var(--green); color: #fff; }
+    .play:hover { background: var(--green-dark); }
+    .download { background: #eef7f1; color: var(--green-dark); }
+    .empty {
+      padding: 24px 12px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      grid-column: 1 / -1;
+    }
+    .player-panel {
+      margin-top: 24px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--soft);
+    }
+    .now-label { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+    #nowPlaying { font-weight: 700; margin: 0 0 12px; overflow-wrap: anywhere; }
+    audio { width: 100%; display: block; }
+    .player-help { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 10px 0 0; }
+    .player-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .secondary { background: #fff; border: 1px solid var(--border); color: var(--text); }
+    .status { font-size: 13px; color: var(--muted); min-height: 18px; margin-top: 8px; }
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    footer a { color: inherit; text-decoration: none; margin: 0 5px; }
+    @media (min-width: 700px) {
+      header { padding: 18px 24px; }
+      .grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+      main { padding: 28px 24px 40px; }
+      .actions { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <div class="logo">♪ Malayalam Music</div>
-  <input class="search" id="search"
-    placeholder="Search songs or albums..."
-    oninput="filterSongs()">
-</header>
+  <header>
+    <div class="topbar">
+      <a class="logo" href="./">♪ Malayalam Music</a>
+    </div>
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="Search songs or albums..." autocomplete="off" aria-label="Search songs">
+    </div>
+  </header>
 
-<main>
-<h2>Latest Songs</h2>
-<div class="grid" id="songs"></div>
+  <main>
+    <section>
+      <div class="section-heading">
+        <h2>Latest Songs</h2>
+      </div>
+      <div class="grid" id="songs" aria-live="polite"></div>
+    </section>
 
-<h2>Now Playing</h2>
-<div id="nowPlaying">Choose a song to play</div>
-<audio id="player" controls preload="none"></audio>
-</main>
+    <section class="player-panel" aria-label="Audio player">
+      <p class="now-label">NOW PLAYING</p>
+      <p id="nowPlaying">Choose a song to play</p>
+      <audio id="player" controls preload="none"></audio>
+      <div class="status" id="status" role="status"></div>
+      <div class="player-buttons">
+        <button type="button" class="secondary" id="openDrive" disabled>Open in Google Drive</button>
+        <button type="button" class="secondary" id="downloadCurrent" disabled>Download file</button>
+      </div>
+      <p class="player-help">
+        If the audio does not play here, use “Open in Google Drive”. Google Drive may not support direct streaming for every file.
+      </p>
+    </section>
+  </main>
 
-<footer>Malayalam Music · Home · Albums · Singers</footer>
+  <footer>
+    Malayalam Music ·
+    <a href="./">Home</a> ·
+    <a href="#songs">Songs</a> ·
+    <a href="#songs">Albums</a>
+  </footer>
 
-<script>
-const music = [
-  {
-    title: "Sample Malayalam Song",
-    year: "2026",
-    cover: "https://placehold.co/500x500?text=Album",
-    driveId: "1AeAqZb2RSMER-nD6NVlvrTUM8K87-qbD"
-  },
-  {
-    title: "Another Sample Song",
-    year: "2025",
-    cover: "https://placehold.co/500x500?text=Music",
-    driveId: "1AeAqZb2RSMER-nD6NVlvrTUM8K87-qbD"
-  }
-];
+  <script>
+    /*
+      Add your own authorized audio files below.
+      driveId = the ID from the Google Drive share URL.
+      cover = a public image URL for the album cover.
+    */
+    const music = [
+      {
+        title: "Malayalam Song",
+        year: "2026",
+        cover: "https://placehold.co/500x500/f0f0f0/777?text=Album",
+        driveId: "1AeAqZb2RSMER-nD6NVlvrTUM8K87-qbD"
+      },
+      {
+        title: "Add Another Song",
+        year: "2025",
+        cover: "https://placehold.co/500x500/f0f0f0/777?text=Music",
+        driveId: ""
+      }
+    ];
 
-function filterSongs(){
-  const q = document.getElementById("search").value.toLowerCase();
-  const list = document.getElementById("songs");
-  list.innerHTML = "";
+    const songsElement = document.getElementById("songs");
+    const searchElement = document.getElementById("search");
+    const player = document.getElementById("player");
+    const nowPlaying = document.getElementById("nowPlaying");
+    const statusElement = document.getElementById("status");
+    const openDriveButton = document.getElementById("openDrive");
+    const downloadButton = document.getElementById("downloadCurrent");
 
-  music.filter(s => s.title.toLowerCase().includes(q))
-  .forEach(s => {
-    const card = document.createElement("div");
-    card.className = "card";
+    let currentSong = null;
 
-    const img = document.createElement("img");
-    img.className = "cover";
-    img.src = s.cover;
-    img.alt = s.title;
+    function getDriveUrls(id) {
+      const safeId = encodeURIComponent(id);
+      return {
+        // This may work for some files, but Google Drive does not guarantee HTML audio streaming.
+        audio: "https://drive.google.com/uc?export=download&id=" + safeId,
+        preview: "https://drive.google.com/file/d/" + safeId + "/preview",
+        file: "https://drive.google.com/file/d/" + safeId + "/view",
+        download: "https://drive.google.com/uc?export=download&id=" + safeId
+      };
+    }
 
-    const info = document.createElement("div");
-    info.className = "info";
+    function renderSongs() {
+      const query = searchElement.value.trim().toLowerCase();
+      songsElement.replaceChildren();
 
-    const title = document.createElement("h3");
-    title.textContent = s.title;
+      const matches = music.filter(song =>
+        (song.title + " " + song.year).toLowerCase().includes(query)
+      );
 
-    const year = document.createElement("p");
-    year.textContent = s.year;
+      if (!matches.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No songs found.";
+        songsElement.appendChild(empty);
+        return;
+      }
 
-    const btn = document.createElement("button");
-    btn.className = "play";
-    btn.textContent = "▶ Play Song";
-    btn.onclick = () => playSong(s);
+      matches.forEach(song => {
+        const card = document.createElement("article");
+        card.className = "card";
 
-    info.append(title, year, btn);
-    card.append(img, info);
-    list.append(card);
-  });
-}
+        const cover = document.createElement("img");
+        cover.className = "cover";
+        cover.src = song.cover;
+        cover.alt = song.title + " cover";
+        cover.loading = "lazy";
+        cover.onerror = () => {
+          cover.onerror = null;
+          cover.src = "https://placehold.co/500x500/f0f0f0/777?text=Music";
+        };
 
-function playSong(song){
-  if(!song.driveId ||
-     song.driveId === "PASTE_YOUR_DRIVE_FILE_ID"){
-    alert("Add a public, authorized audio file ID first.");
-    return;
-  }
+        const info = document.createElement("div");
+        info.className = "info";
 
-  const player = document.getElementById("player");
-  player.src = "https://drive.google.com/uc?export=download&id="
-               + encodeURIComponent(song.driveId);
-  document.getElementById("nowPlaying").textContent = song.title;
-  player.play().catch(() => {
-    alert("Audio playback failed. Check the Drive sharing permission.");
-  });
-}
+        const title = document.createElement("h3");
+        title.className = "song-title";
+        title.textContent = song.title;
 
-filterSongs();
-</script>
+        const year = document.createElement("p");
+        year.className = "year";
+        year.textContent = song.year;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const play = document.createElement("button");
+        play.type = "button";
+        play.className = "play";
+        play.textContent = "▶ Play Song";
+        play.addEventListener("click", () => playSong(song));
+
+        const download = document.createElement("a");
+        download.className = "action-link download";
+        download.textContent = "↓ Download";
+        download.href = song.driveId
+          ? getDriveUrls(song.driveId).download
+          : "#";
+        download.target = "_blank";
+        download.rel = "noopener noreferrer";
+        if (!song.driveId) {
+          download.addEventListener("click", event => {
+            event.preventDefault();
+            alert("Add this song's Google Drive file ID first.");
+          });
+        }
+
+        actions.append(play, download);
+        info.append(title, year, actions);
+        card.append(cover, info);
+        songsElement.appendChild(card);
+      });
+    }
+
+    async function playSong(song) {
+      if (!song.driveId) {
+        alert("Add a Google Drive file ID first.");
+        return;
+      }
+
+      currentSong = song;
+      const urls = getDriveUrls(song.driveId);
+      nowPlaying.textContent = song.title;
+      statusElement.textContent = "Trying to play audio…";
+      openDriveButton.disabled = false;
+      downloadButton.disabled = false;
+
+      player.pause();
+      player.removeAttribute("src");
+      player.load();
+      player.src = urls.audio;
+      player.load();
+
+      try {
+        await player.play();
+        statusElement.textContent = "";
+      } catch (error) {
+        statusElement.textContent =
+          "Direct playback was blocked. Open the file in Google Drive to listen.";
+        // Keep the Drive actions available; do not automatically open a new tab.
+      }
+    }
+
+    openDriveButton.addEventListener("click", () => {
+      if (!currentSong) return;
+      window.open(getDriveUrls(currentSong.driveId).file, "_blank", "noopener,noreferrer");
+    });
+
+    downloadButton.addEventListener("click", () => {
+      if (!currentSong) return;
+      window.open(getDriveUrls(currentSong.driveId).download, "_blank", "noopener,noreferrer");
+    });
+
+    player.addEventListener("playing", () => {
+      statusElement.textContent = "";
+    });
+
+    player.addEventListener("error", () => {
+      if (currentSong) {
+        statusElement.textContent =
+          "This file could not be streamed in the page. Try Open in Google Drive.";
+      }
+    });
+
+    searchElement.addEventListener("input", renderSongs);
+    renderSongs();
+  </script>
 </body>
 </html>
