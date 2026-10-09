@@ -6,277 +6,89 @@
 <meta name="theme-color" content="#ffffff">
 <title>Malayalam Music</title>
 <style>
-:root{--green:#168653;--dark:#106b42;--text:#202124;--muted:#73777d;--border:#e8eaed;--soft:#f6f8f7}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:#fff}
-header{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.97);border-bottom:1px solid var(--border);padding:15px 18px}
-.topbar{max-width:1200px;margin:auto}
-.logo{font-size:22px;font-weight:700;color:var(--green);text-decoration:none}
-.search-wrap{max-width:1200px;margin:14px auto 0}
-#search{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;outline:none}
-#search:focus{border-color:var(--green)}
-main{max-width:1200px;padding:22px 18px 32px;margin:auto}
-.heading{display:flex;align-items:center;justify-content:space-between;margin:10px 0 14px}
-h2{font-size:20px;margin:0}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{border:1px solid var(--border);border-radius:12px;overflow:hidden;min-width:0;background:#fff}
-.cover{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#eee}
-.info{padding:10px}
-.song-title{font-size:14px;line-height:1.35;margin:0 0 5px;overflow-wrap:anywhere}
-.year{color:var(--muted);font-size:12px;margin:0 0 10px}
-.actions{display:grid;grid-template-columns:1fr;gap:7px}
-button,.linkbtn{border:0;border-radius:8px;padding:10px 9px;min-height:38px;font-size:13px;cursor:pointer;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
-.play{background:var(--green);color:white}.play:hover{background:var(--dark)}
-.download{background:#eef7f1;color:var(--dark)}
-.empty{padding:24px 12px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:12px;grid-column:1/-1}
-.panel{margin-top:24px;padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--soft)}
-.small{font-size:12px;color:var(--muted);margin:0 0 7px}
-#nowPlaying{font-weight:700;margin:0 0 12px;overflow-wrap:anywhere}
-audio{width:100%;display:block}
-#youtubePlayer{width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#111;display:none}
-.status{font-size:13px;line-height:1.5;color:var(--muted);min-height:18px;margin-top:8px}
-.player-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.secondary{background:#fff;border:1px solid var(--border);color:var(--text)}
-.secondary:disabled{opacity:.5;cursor:not-allowed}
-footer{text-align:center;padding:24px 16px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+:root{--green:#168653;--dark:#106b42;--text:#202124;--muted:#73777d;--border:#e8eaed}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:#fff}
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--border);padding:16px 18px}
+.wrap{max-width:1200px;margin:auto}.logo{font-size:22px;font-weight:700;color:var(--green);text-decoration:none}
+#search{width:100%;margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;outline:none}
+#search:focus{border-color:var(--green)}main{max-width:1200px;margin:auto;padding:24px 18px 36px}
+h2{font-size:20px;margin:4px 0 16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{border:1px solid var(--border);border-radius:12px;overflow:hidden;min-width:0}.cover-link{display:block}
+.cover{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#f0f0f0}
+.info{padding:10px}.song-title{display:block;font-size:14px;line-height:1.4;font-weight:700;color:var(--text);text-decoration:none;margin-bottom:5px;overflow-wrap:anywhere}
+.song-title:hover{color:var(--green)}.year{font-size:12px;color:var(--muted);margin:0 0 10px}
+.actions{display:grid;grid-template-columns:1fr;gap:7px}.btn{border:0;border-radius:8px;padding:10px 8px;min-height:38px;font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer}
+.play{background:var(--green);color:#fff}.download{background:#eef7f1;color:var(--dark)}.empty{grid-column:1/-1;padding:24px;text-align:center;border:1px dashed var(--border);border-radius:12px;color:var(--muted)}
+footer{text-align:center;padding:24px 12px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
 @media(min-width:700px){header{padding:18px 24px}.grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}main{padding:28px 24px 40px}.actions{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<header>
-  <div class="topbar"><a class="logo" href="./">♪ Malayalam Music</a></div>
-  <div class="search-wrap"><input id="search" type="search" placeholder="Search songs or albums..." autocomplete="off" aria-label="Search songs"></div>
-</header>
-
-<main>
-  <section>
-    <div class="heading"><h2>Latest Songs</h2></div>
-    <div class="grid" id="songs" aria-live="polite"></div>
-  </section>
-
-  <section class="panel" aria-label="Music player">
-    <p class="small">NOW PLAYING</p>
-    <p id="nowPlaying">Choose a song to play</p>
-
-    <!-- Native audio player for a direct audio file that the browser can stream -->
-    <audio id="audioPlayer" controls preload="none"></audio>
-
-    <!-- Official YouTube embedded player appears when a YouTube link is selected -->
-    <iframe id="youtubePlayer" title="YouTube music player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-    <div id="status" class="status" role="status"></div>
-    <div class="player-buttons">
-      <button class="secondary" id="openDrive" type="button" disabled>Open Drive File</button>
-      <button class="secondary" id="downloadCurrent" type="button" disabled>Download Audio File</button>
-      <button class="secondary" id="openYouTube" type="button" disabled>Open YouTube</button>
-    </div>
-    <p class="small" style="margin-top:12px;line-height:1.5">
-      YouTube links play using YouTube's embedded player. Direct audio playback and downloads use an authorized Google Drive audio file. Google Drive may limit direct playback or ask for confirmation for large files.
-    </p>
-  </section>
-</main>
-
+<header><div class="wrap"><a class="logo" href="./">♪ Malayalam Music</a><input id="search" type="search" placeholder="Search songs or albums..." aria-label="Search songs"></div></header>
+<main><h2>Latest Songs</h2><div class="grid" id="songs"></div></main>
 <footer>Malayalam Music · Home · Songs · Albums · Singers</footer>
-
 <script>
 /*
-  SETUP:
-  1. Replace each title/year/cover with your song details.
-  2. youtubeUrl: paste the YouTube video URL, if available.
-  3. driveId: paste the Google Drive FILE ID, if you have an authorized audio file.
-  4. Do not use this site to download or distribute audio without permission.
+  EDIT SONG DATA HERE.
+  youtubeUrl = official YouTube video link for streaming on the song details page.
+  driveId = Google Drive FILE ID for an audio file you own or have permission to distribute.
 */
 const music = [
   {
-    title: "Malayalam Song",
+    id: "maanthrikam",
+    title: "Maanthrikam",
+    album: "Bethlehem Kudumba Unit",
     year: "2026",
+    singer: "Add Singer Name",
+    music: "Add Music Director",
+    director: "Add Director",
     cover: "https://placehold.co/500x500/f0f0f0/777?text=Album",
-    youtubeUrl: "https://youtu.be/z10BLYwETlM?si=yhOrokgcdvkpNMzu",
-    driveId: "1AeAqZb2RSMER-nD6NVlvrTUM8K87-qbD"
+    youtubeUrl: "https://www.youtube.com/watch?v=VIDEO_ID",
+    driveId: "1AeAqZb2RSMER-nD6NVlvrTUM8K87-qbD",
+    details: "Add song details here."
   },
   {
+    id: "sample-song-2",
     title: "Add Another Song",
+    album: "Add Album Name",
     year: "2025",
+    singer: "Add Singer Name",
+    music: "Add Music Director",
+    director: "Add Director",
     cover: "https://placehold.co/500x500/f0f0f0/777?text=Music",
-    youtubeUrl: "https://youtu.be/z10BLYwETlM?si=yhOrokgcdvkpNMzu",
-    driveId: "https://drive.usercontent.google.com/download?id=1a9V7Ud4-dbMnOaEWgmtBo4-5UdP6EW2u&export=download&confirm=t"
+    youtubeUrl: "",
+    driveId: "",
+    details: ""
   }
 ];
 
-const songsElement = document.getElementById("songs");
-const searchElement = document.getElementById("search");
-const audioPlayer = document.getElementById("audioPlayer");
-const youtubePlayer = document.getElementById("youtubePlayer");
-const nowPlaying = document.getElementById("nowPlaying");
-const statusElement = document.getElementById("status");
-const openDriveButton = document.getElementById("openDrive");
-const downloadButton = document.getElementById("downloadCurrent");
-const openYouTubeButton = document.getElementById("openYouTube");
-let currentSong = null;
-
-function driveUrls(id) {
-  const safeId = encodeURIComponent(id);
-  return {
-    audio: "https://drive.google.com/uc?export=download&id=" + safeId,
-    file: "https://drive.google.com/file/d/" + safeId + "/view",
-    download: "https://drive.google.com/uc?export=download&id=" + safeId
-  };
-}
-
-function youtubeId(url) {
-  if (!url) return "";
-  try {
-    const parsed = new URL(url);
-    if (parsed.hostname === "youtu.be") return parsed.pathname.slice(1).split("/")[0];
-    if (parsed.hostname.endsWith("youtube.com") || parsed.hostname.endsWith("youtube-nocookie.com")) {
-      if (parsed.pathname === "/watch") return parsed.searchParams.get("v") || "";
-      const parts = parsed.pathname.split("/").filter(Boolean);
-      if (["embed", "shorts", "live"].includes(parts[0])) return parts[1] || "";
-    }
-  } catch (e) {}
-  return "";
-}
-
-function renderSongs() {
-  const query = searchElement.value.trim().toLowerCase();
-  songsElement.replaceChildren();
-  const matches = music.filter(song =>
-    (song.title + " " + song.year).toLowerCase().includes(query)
-  );
-
-  if (!matches.length) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "No songs found.";
-    songsElement.appendChild(empty);
-    return;
+const list = document.getElementById("songs");
+const search = document.getElementById("search");
+function render() {
+  const q = search.value.trim().toLowerCase();
+  list.replaceChildren();
+  const filtered = music.filter(s => [s.title,s.album,s.year,s.singer].join(" ").toLowerCase().includes(q));
+  if (!filtered.length) {
+    const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "No songs found."; list.append(empty); return;
   }
-
-  matches.forEach(song => {
-    const card = document.createElement("article");
-    card.className = "card";
-
-    const cover = document.createElement("img");
-    cover.className = "cover";
-    cover.src = song.cover || "https://placehold.co/500x500/f0f0f0/777?text=Music";
-    cover.alt = song.title + " cover";
-    cover.loading = "lazy";
-    cover.onerror = () => {
-      cover.onerror = null;
-      cover.src = "https://placehold.co/500x500/f0f0f0/777?text=Music";
-    };
-
-    const info = document.createElement("div");
-    info.className = "info";
-    const title = document.createElement("h3");
-    title.className = "song-title";
-    title.textContent = song.title;
-    const year = document.createElement("p");
-    year.className = "year";
-    year.textContent = song.year;
-
-    const actions = document.createElement("div");
-    actions.className = "actions";
-
-    const playButton = document.createElement("button");
-    playButton.type = "button";
-    playButton.className = "play";
-    playButton.textContent = "▶ Play";
-    playButton.addEventListener("click", () => playSong(song));
-
-    const downloadLink = document.createElement("a");
-    downloadLink.className = "linkbtn download";
-    downloadLink.textContent = "↓ Download";
-    downloadLink.href = song.driveId ? driveUrls(song.driveId).download : "#";
-    downloadLink.target = "_blank";
-    downloadLink.rel = "noopener noreferrer";
-    if (!song.driveId) {
-      downloadLink.addEventListener("click", event => {
-        event.preventDefault();
-        alert("This song has no authorized Google Drive audio file ID yet.");
-      });
-    }
-
-    actions.append(playButton, downloadLink);
-    info.append(title, year, actions);
-    card.append(cover, info);
-    songsElement.appendChild(card);
+  filtered.forEach(s => {
+    const card = document.createElement("article"); card.className = "card";
+    const coverLink = document.createElement("a"); coverLink.className = "cover-link"; coverLink.href = "song.html?id=" + encodeURIComponent(s.id);
+    const img = document.createElement("img"); img.className = "cover"; img.src = s.cover; img.alt = s.title + " cover"; img.loading = "lazy";
+    img.onerror = () => { img.onerror = null; img.src = "https://placehold.co/500x500/f0f0f0/777?text=Music"; };
+    coverLink.append(img);
+    const info = document.createElement("div"); info.className = "info";
+    const title = document.createElement("a"); title.className = "song-title"; title.href = "song.html?id=" + encodeURIComponent(s.id); title.textContent = s.title;
+    const year = document.createElement("p"); year.className = "year"; year.textContent = s.year;
+    const actions = document.createElement("div"); actions.className = "actions";
+    const view = document.createElement("a"); view.className = "btn play"; view.href = "song.html?id=" + encodeURIComponent(s.id); view.textContent = "Song Details";
+    const dl = document.createElement("a"); dl.className = "btn download"; dl.textContent = "↓ Download";
+    if (s.driveId) { dl.href = "https://drive.google.com/uc?export=download&id=" + encodeURIComponent(s.driveId); dl.target = "_blank"; dl.rel = "noopener noreferrer"; }
+    else { dl.href = "#"; dl.addEventListener("click", e => { e.preventDefault(); alert("Add the Google Drive audio file ID first."); }); }
+    actions.append(view,dl); info.append(title,year,actions); card.append(coverLink,info); list.append(card);
   });
 }
-
-function stopCurrentPlayers() {
-  audioPlayer.pause();
-  audioPlayer.removeAttribute("src");
-  audioPlayer.load();
-  youtubePlayer.src = "";
-  youtubePlayer.style.display = "none";
-  audioPlayer.style.display = "block";
-}
-
-async function playSong(song) {
-  currentSong = song;
-  nowPlaying.textContent = song.title;
-  statusElement.textContent = "";
-  stopCurrentPlayers();
-
-  openDriveButton.disabled = !song.driveId;
-  downloadButton.disabled = !song.driveId;
-  openYouTubeButton.disabled = !youtubeId(song.youtubeUrl);
-
-  const id = youtubeId(song.youtubeUrl);
-  if (id) {
-    // Use the official YouTube embed; it may show ads or require interaction.
-    audioPlayer.style.display = "none";
-    youtubePlayer.style.display = "block";
-    youtubePlayer.src = "https://www.youtube-nocookie.com/embed/" +
-      encodeURIComponent(id) + "?autoplay=1";
-    statusElement.textContent = "Playing via YouTube's embedded video player.";
-    return;
-  }
-
-  if (song.driveId) {
-    audioPlayer.src = driveUrls(song.driveId).audio;
-    audioPlayer.load();
-    statusElement.textContent = "Trying Google Drive audio. If it fails, use Open Drive File.";
-    try {
-      await audioPlayer.play();
-      statusElement.textContent = "";
-    } catch (error) {
-      statusElement.textContent = "Direct audio playback was blocked. Use Open Drive File to listen.";
-    }
-    return;
-  }
-
-  statusElement.textContent = "Add a YouTube video link or authorized Google Drive audio file for this song.";
-}
-
-openDriveButton.addEventListener("click", () => {
-  if (!currentSong || !currentSong.driveId) return;
-  window.open(driveUrls(currentSong.driveId).file, "_blank", "noopener,noreferrer");
-});
-
-downloadButton.addEventListener("click", () => {
-  if (!currentSong || !currentSong.driveId) return;
-  window.open(driveUrls(currentSong.driveId).download, "_blank", "noopener,noreferrer");
-});
-
-openYouTubeButton.addEventListener("click", () => {
-  if (!currentSong || !currentSong.youtubeUrl) return;
-  const id = youtubeId(currentSong.youtubeUrl);
-  if (id) window.open("https://www.youtube.com/watch?v=" + encodeURIComponent(id), "_blank", "noopener,noreferrer");
-});
-
-audioPlayer.addEventListener("playing", () => { statusElement.textContent = ""; });
-audioPlayer.addEventListener("error", () => {
-  if (currentSong && currentSong.driveId) {
-    statusElement.textContent = "Google Drive did not provide a stream to this player. Use Open Drive File or use a dedicated streaming host.";
-  }
-});
-
-searchElement.addEventListener("input", renderSongs);
-renderSongs();
+search.addEventListener("input",render); render();
 </script>
 </body>
 </html>
