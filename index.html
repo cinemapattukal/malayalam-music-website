@@ -48,7 +48,7 @@ function render(){
  [["songs",songRows,"song"],["singers",singerRows,"singer"],["directors",directorRows,"director"]].forEach(([id,rows,type])=>{const el=$(id);el.replaceChildren();if(!rows.length){const e=document.createElement("div");e.className="empty";e.textContent="No "+(type==="song"?"songs":type==="singer"?"singers":"music directors")+" found.";el.append(e)}else rows.forEach(r=>el.append(card(r,type)))});
 }
 function makePeople(){
- // Keep Firestore profile records first so their own image URLs are preserved.
+ // Firestore profile records take priority so their own image URLs are preserved.
  const singerMap=new Map(),directorMap=new Map();
  singers.forEach(p=>{if(p.name)singerMap.set(String(p.name).trim(),p)});
  directors.forEach(p=>{if(p.name)directorMap.set(String(p.name).trim(),p)});
@@ -59,12 +59,29 @@ function makePeople(){
  singers=[...singerMap.values()];
  directors=[...directorMap.values()];
 }
+const CACHE_KEY="malayalamMusicHomeCache_v1";
+// Show the last successful data immediately, so a refresh does not briefly look empty.
+try{
+ const cached=localStorage.getItem(CACHE_KEY);
+ if(cached){
+  const data=JSON.parse(cached);
+  songs=Array.isArray(data.songs)?data.songs:[];
+  singers=Array.isArray(data.singers)?data.singers:[];
+  directors=Array.isArray(data.directors)?data.directors:[];
+  makePeople();render();
+ }
+}catch(e){console.warn("Could not read cached music data",e)}
 $("search").addEventListener("input",render);
 try{
  const [s,si,md]=await Promise.all([getDocs(collection(db,"songs")),getDocs(collection(db,"singers")),getDocs(collection(db,"musicDirectors"))]);
  songs=s.docs.map(d=>({...d.data(),docId:d.id,id:d.data().id||d.id})).sort((a,b)=>String(b.year||"").localeCompare(String(a.year||"")));
  singers=si.docs.map(d=>({...d.data(),docId:d.id,name:d.data().name||d.id}));
  directors=md.docs.map(d=>({...d.data(),docId:d.id,name:d.data().name||d.id}));
+ // Save raw Firestore records, not the merged display lists.
+ try{localStorage.setItem(CACHE_KEY,JSON.stringify({songs,singers,directors}))}catch(e){console.warn("Could not cache music data",e)}
  makePeople();render();
-}catch(e){console.error(e);["songs","singers","directors"].forEach(id=>{$(id).innerHTML='<div class="empty">Could not load data. Check Firestore Rules and collection names.</div>'})}
+}catch(e){
+ console.error(e);
+ if(!songs.length&&!singers.length&&!directors.length){["songs","singers","directors"].forEach(id=>{$(id).innerHTML='<div class="empty">Could not load data. Check Firestore Rules and collection names.</div>'})}
+}
 </script></body></html>
