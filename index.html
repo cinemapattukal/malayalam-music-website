@@ -11,12 +11,13 @@ main{max-width:1200px;margin:auto;padding:24px 18px 36px}.section{margin-bottom:
 footer{text-align:center;padding:24px 12px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
 @media(min-width:700px){header{padding:18px 24px}.grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}main{padding:28px 24px 40px}}
 </style></head><body>
-<header><div class="wrap"><a class="logo" href="./">♪ Malayalam Music</a><nav><a href="./">Home</a><a href="singers.html">Singers</a><a href="music-directors.html">Music Directors</a></nav><input id="search" type="search" placeholder="Search songs, singers or music directors..." aria-label="Search"></div></header>
+<header><div class="wrap"><a class="logo" href="./">♪ Malayalam Music</a><nav><a href="./">Home</a><a href="album.html">Albums</a><a href="singers.html">Singers</a><a href="music-directors.html">Music Directors</a></nav><input id="search" type="search" placeholder="Search songs, singers or music directors..." aria-label="Search"></div></header>
 <main>
 <section class="section"><h2>Latest Songs</h2><div class="grid" id="songs"><div class="empty">Loading songs…</div></div></section>
+<section class="section"><h2>Latest Albums</h2><div class="grid" id="albums"><div class="empty">Loading albums…</div></div></section>
 <section class="section"><h2>Singers</h2><div class="grid" id="singers"><div class="empty">Loading singers…</div></div></section>
 <section class="section"><h2>Music Directors</h2><div class="grid" id="directors"><div class="empty">Loading music directors…</div></div></section>
-</main><footer>Malayalam Music · Home · Singers · Music Directors</footer>
+</main><footer>Malayalam Music · Home · Albums · Singers · Music Directors</footer>
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -32,7 +33,7 @@ const firebaseConfig = {
 };
 
 const app=initializeApp(firebaseConfig),db=getFirestore(app);
-const $=id=>document.getElementById(id);let songs=[],singers=[],directors=[];
+const $=id=>document.getElementById(id);let songs=[],singers=[],directors=[],albums=[];
 const fallback="https://placehold.co/500x500/f0f0f0/777?text=Music";
 function names(value){return String(value||"").split(",").map(x=>x.trim()).filter(Boolean)}
 function card(item,type){const c=document.createElement("article");c.className="card";const img=document.createElement("img");img.className="cover";img.src=item.cover||item.image||fallback;img.alt=item.title||item.name||"Music";img.loading="lazy";img.onerror=()=>{img.onerror=null;img.src=fallback};const info=document.createElement("div");info.className="info";const a=document.createElement("a");a.className="name";a.textContent=item.title||item.name||"Untitled";const sub=document.createElement("div");sub.className=type==="song"?"year":"sub";let url="";
@@ -40,11 +41,13 @@ if(type==="song"){url="song.html?id="+encodeURIComponent(item.id||item.docId);su
 else if(type==="singer"){url="singers.html?name="+encodeURIComponent(item.name);sub.textContent="Singer"}
 else{url="music-directors.html?name="+encodeURIComponent(item.name);sub.textContent="Music Director"}
 a.href=url;const btn=document.createElement("a");btn.className="btn";btn.href=url;btn.textContent=type==="song"?"Song Details":"View Songs";info.append(a,sub,btn);c.append(img,info);return c}
+function albumCard(item){const c=document.createElement("article");c.className="card";const img=document.createElement("img");img.className="cover";img.src=item.imageUrl||item.cover||fallback;img.alt=item.name||"Album";img.loading="lazy";img.onerror=()=>{img.onerror=null;img.src=fallback};const info=document.createElement("div");info.className="info";const a=document.createElement("a");a.className="name";a.textContent=item.name||"Untitled Album";a.href="album.html?id="+encodeURIComponent(item.docId||item.id||"");const sub=document.createElement("div");sub.className="sub";sub.textContent=[item.year,item.totalTracks?item.totalTracks+" Songs":""].filter(Boolean).join(" · ");const btn=document.createElement("a");btn.className="btn";btn.href=a.href;btn.textContent="View Album";info.append(a,sub,btn);c.append(img,info);return c}
 function render(){
  const q=$("search").value.trim().toLowerCase();
  const songRows=songs.filter(s=>[s.title,s.album,s.year,s.singer,s.music].join(" ").toLowerCase().includes(q));
  const singerRows=singers.filter(p=>String(p.name||"").toLowerCase().includes(q));
  const directorRows=directors.filter(p=>String(p.name||"").toLowerCase().includes(q));
+ const albumRows=albums.filter(a=>[a.name,a.year,a.director,a.starring].join(" ").toLowerCase().includes(q));const albumEl=$("albums");albumEl.replaceChildren();if(!albumRows.length){const e=document.createElement("div");e.className="empty";e.textContent="No albums found.";albumEl.append(e)}else albumRows.forEach(a=>albumEl.append(albumCard(a)));
  [["songs",songRows,"song"],["singers",singerRows,"singer"],["directors",directorRows,"director"]].forEach(([id,rows,type])=>{const el=$(id);el.replaceChildren();if(!rows.length){const e=document.createElement("div");e.className="empty";e.textContent="No "+(type==="song"?"songs":type==="singer"?"singers":"music directors")+" found.";el.append(e)}else rows.forEach(r=>el.append(card(r,type)))});
 }
 function makePeople(){
@@ -73,7 +76,7 @@ try{
 }catch(e){console.warn("Could not read cached music data",e)}
 $("search").addEventListener("input",render);
 try{
- const [s,si,md]=await Promise.all([getDocs(collection(db,"songs")),getDocs(collection(db,"singers")),getDocs(collection(db,"musicDirectors"))]);
+ const [s,si,md,al]=await Promise.all([getDocs(collection(db,"songs")),getDocs(collection(db,"singers")),getDocs(collection(db,"musicDirectors")),getDocs(collection(db,"albums"))]);
  songs=s.docs.map(d=>({...d.data(),docId:d.id,id:d.data().id||d.id})).sort((a,b)=>String(b.year||"").localeCompare(String(a.year||"")));
  singers=si.docs.map(d=>({...d.data(),docId:d.id,name:d.data().name||d.id}));
  directors=md.docs.map(d=>({...d.data(),docId:d.id,name:d.data().name||d.id}));
